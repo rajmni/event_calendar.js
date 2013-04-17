@@ -1,6 +1,6 @@
 $ ->
 	DAYS_IN_THE_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-	DAYS_OF_WEEK = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+	DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 	
 	go_backwards = (full_week, day_of_the_week, date, month) ->
 		if date - 1 < 1
@@ -48,6 +48,8 @@ $ ->
 		full_week
 		
 	append_dates_to_cal = (full_week) ->
+		full_week = get_week()
+	
 		for i in [0..7]
 			day = i + 1
 			$("#" + DAYS_OF_WEEK[i] + "_title").text(DAYS_OF_WEEK[i] + " the " + full_week[i])
@@ -60,11 +62,24 @@ $ ->
 				new_div = $("#time_column").append("<div id='#{hour}'>#{hour}</div>")
 				$("##{hour}").css("margin-top", pixels_per_hour)
 	
-	main_function = ->
-		
+	build_calendar = ->
 		full_week = get_week()
-		append_dates_to_cal(full_week)
+		
+		html_for_table = "<tr><td id='time_column'></td>"
+		
+		for day in [0..6]
+			html_for_table += "<td id='the_" + full_week[day] + "'></td>"
+		
+		html_for_table += "</tr>"
+		
+		$("#calendar_table").append(html_for_table)
+		
+			
 	
+	main_function = ->
+		build_calendar()
+		append_dates_to_cal() 
+		
 		# setting the height of the day column
 		height_of_column = 750
 		pixels_per_hour = height_of_column / 24

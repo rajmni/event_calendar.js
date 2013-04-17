@@ -1,8 +1,8 @@
 (function() {
   $(function() {
-    var DAYS_IN_THE_MONTH, DAYS_OF_WEEK, append_dates_to_cal, get_week, go_backwards, go_forwards, main_function, propagate_time_column;
+    var DAYS_IN_THE_MONTH, DAYS_OF_WEEK, append_dates_to_cal, build_calendar, get_week, go_backwards, go_forwards, main_function, propagate_time_column;
     DAYS_IN_THE_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    DAYS_OF_WEEK = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     go_backwards = function(full_week, day_of_the_week, date, month) {
       if (date - 1 < 1) {
         return DAYS_IN_THE_MONTH[month - 1];
@@ -45,6 +45,7 @@
     };
     append_dates_to_cal = function(full_week) {
       var day, i, _results;
+      full_week = get_week();
       _results = [];
       for (i = 0; i <= 7; i++) {
         day = i + 1;
@@ -60,10 +61,20 @@
       }
       return _results;
     };
-    main_function = function() {
-      var event, events, full_week, height_of_column, length, pixels_per_hour, _i, _len, _ref, _results;
+    build_calendar = function() {
+      var day, full_week, html_for_table;
       full_week = get_week();
-      append_dates_to_cal(full_week);
+      html_for_table = "<tr><td id='time_column'></td>";
+      for (day = 0; day <= 6; day++) {
+        html_for_table += "<td id='the_" + full_week[day] + "'></td>";
+      }
+      html_for_table += "</tr>";
+      return $("#calendar_table").append(html_for_table);
+    };
+    main_function = function() {
+      var event, events, height_of_column, length, pixels_per_hour, _i, _len, _ref, _results;
+      build_calendar();
+      append_dates_to_cal();
       height_of_column = 750;
       pixels_per_hour = height_of_column / 24;
       $("td").css("height", height_of_column);
