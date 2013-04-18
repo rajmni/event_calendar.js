@@ -54,13 +54,13 @@ $ ->
 			day = i + 1
 			$("#" + DAYS_OF_WEEK[i] + "_title").text(DAYS_OF_WEEK[i] + " the " + full_week[i])
 
-	propagate_time_column = (pixels_per_hour) ->
+	populate_time_column = (pixels_per_hour) ->
 		for hour in [0..23]
 			if hour is 0
 				$("#time_column").append("<div>#{hour}</div>")
 			else
 				new_div = $("#time_column").append("<div id='#{hour}'>#{hour}</div>")
-				$("##{hour}").css("margin-top", pixels_per_hour)
+				$("##{hour}").css("margin-top", pixels_per_hour - 20) # why minus 20? Because te actual number takes up 20 pixels, so if we didn't minus 20, it would be pixels_per_hour + that unaccounted for 20px
 	
 	build_calendar = ->
 		full_week = get_week()
@@ -68,13 +68,23 @@ $ ->
 		html_for_table = "<tr><td id='time_column'></td>"
 		
 		for day in [0..6]
-			html_for_table += "<td id='the_" + full_week[day] + "'></td>"
+			html_for_table += "<td class='day_columns' id='the_" + full_week[day] + "'></td>"
 		
 		html_for_table += "</tr>"
 		
 		$("#calendar_table").append(html_for_table)
 		
-			
+	populate_events = (events, pixels_per_hour) ->
+		# adding the new event div, starting with everything on sunday
+		for event in events
+			length = 1 # this is because we don't have the proper date system set up, so I'm just using this so I can do the event system now
+			margin_top = event.start_time * pixels_per_hour
+			height = length * pixels_per_hour
+			$("#the_14").append("<div style='margin-top:" + margin_top + "; height: " + height + "; background-color: red'></div>")
+			console.log "margin_top: " + height 
+			console.log "event.start_time * pixels_per_hour = " + event.start_time * pixels_per_hour
+			console.log "length * pixels_per_hour = " + length * pixels_per_hour
+		
 	
 	main_function = ->
 		build_calendar()
@@ -85,12 +95,10 @@ $ ->
 		pixels_per_hour = height_of_column / 24
 		$("td").css "height", height_of_column
 	
-		propagate_time_column(pixels_per_hour) # setting the time_column up and giving it times
+		populate_time_column(pixels_per_hour) # setting the time_column up and giving it times
 		
 		events = jQuery.parseJSON('[{"start_time":12,"end_time":1},{"start_time":2,"end_time":3}]')
-		# adding the new event div, starting with everything on sunday
-		for event in events.length
-			length = 1
-			$("#sunday").append("<div></div>")
+		populate_events(events, pixels_per_hour)
+		
 
 	main_function()
