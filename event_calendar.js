@@ -72,14 +72,16 @@
       return $("#calendar_table").append(html_for_table);
     };
     populate_events = function(events, pixels_per_hour) {
-      var event, height, length, margin_top, _i, _len, _results;
+      var event, event_in_date, height, length, margin_top, _i, _len, _results;
       _results = [];
       for (_i = 0, _len = events.length; _i < _len; _i++) {
         event = events[_i];
-        length = 1;
+        event_in_date = new Date(event.start_time * 1000);
+        console.log(event_in_date);
+        length = (event.end_time - event.start_time) / 3600;
         height = length * pixels_per_hour;
-        margin_top = event.start_time * pixels_per_hour;
-        $("#the_14").append("<div style='margin-top:" + margin_top + "; height: " + height + "; background-color: red'></div>");
+        margin_top = event_in_date.getHours() * pixels_per_hour + height / 2;
+        $("#the_" + event_in_date.getDate()).append("<div style='margin-top:" + margin_top + "px; height: " + height + "px; background-color: red'></div>");
         console.log("margin_top: " + height);
         console.log("event.start_time * pixels_per_hour = " + event.start_time * pixels_per_hour);
         _results.push(console.log("length * pixels_per_hour = " + length * pixels_per_hour));
@@ -94,7 +96,7 @@
       pixels_per_hour = height_of_column / 24;
       $("td").css("height", height_of_column);
       populate_time_column(pixels_per_hour);
-      events = jQuery.parseJSON('[{"start_time":12,"end_time":1},{"start_time":2,"end_time":3}]');
+      events = jQuery.parseJSON('[{"start_time":1365958800,"end_time":1365962400},{"start_time":1366102800,"end_time":1366110000}]');
       return populate_events(events, pixels_per_hour);
     };
     return main_function();
