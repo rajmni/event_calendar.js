@@ -82,14 +82,15 @@
         height = length * pixels_per_hour;
         displacement = height / 2;
         if (is_it_first_of_day === true) {
-          console.log("first");
           margin_top = event_in_date.getHours() * pixels_per_hour + displacement;
         } else {
-          console.log("second");
           console.log((event.start_time - previous_event.end_time) / 3600);
           margin_top = ((event.start_time - previous_event.end_time) / 3600) * pixels_per_hour + displacement;
         }
         console.log(event_in_date);
+        console.log("pixels_per_hour: " + pixels_per_hour);
+        console.log("height / 2: " + height / 2);
+        console.log("margin-top: " + margin_top);
         is_it_first_of_day = false;
         previous_event = event;
         previous_event_in_date = event_in_date;
