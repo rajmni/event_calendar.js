@@ -75,11 +75,28 @@ $ ->
 		$("#calendar_table").append(html_for_table)
 		
 	populate_events = (events, pixels_per_hour) ->
-		for event in events # looping through the JSON of events
+		is_it_first_of_day = true
+		for event in events # looping through the JSON of events			
 			event_in_date = new Date(event.start_time*1000) # putting it in date format
 			length = (event.end_time - event.start_time) / 3600 # length in hours: end_time - start_time will give seconds. There are 3600 seconds in an hour. 
 			height = length * pixels_per_hour
-			margin_top = event_in_date.getHours() * pixels_per_hour + height / 2 # why height / 2? I think it's centering things. So that displaces it downward. 
+			
+			displacement =  height / 2 # why height / 2? I think it automtacially centers things. So that displaces it downward. 
+			
+			if is_it_first_of_day is true
+				console.log "first"
+				margin_top = event_in_date.getHours() * pixels_per_hour + displacement 
+			else
+				console.log "second"
+				console.log (event.start_time - previous_event.end_time) / 3600
+				margin_top = ((event.start_time - previous_event.end_time) / 3600) * pixels_per_hour + displacement
+			console.log event_in_date
+			is_it_first_of_day = false 
+				
+			# storing these for use next loop
+			previous_event = event 
+			previous_event_in_date = event_in_date
+			
 			$("#the_" + event_in_date.getDate()).append("<div style='margin-top:" + margin_top + "px; height: " + height + "px; background-color: red'></div>")
 		
 	
@@ -94,7 +111,7 @@ $ ->
 	
 		populate_time_column(pixels_per_hour) # setting the time_column up and giving it times
 		
-		events = jQuery.parseJSON('[{"start_time":1365958800,"end_time":1365962400},{"start_time":1366102800,"end_time":1366110000}]')
+		events = jQuery.parseJSON('[{"start_time":1366790400, "end_time":1366794000}, {"start_time":1366822800,"end_time":1366826400}]')
 		populate_events(events, pixels_per_hour)
 		
 
